@@ -1,25 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PostCard from './PostCard';
 import PostDetail from './PostDetail';
+import SearchBar from './SearchBar';
 import { Post } from '../types';
+import { useSearch } from '../contexts/SearchContext';
 
 interface SquareProps {
   onRefresh?: () => void;
 }
 
-const Square: React.FC<SquareProps> = ({ onRefresh }) => {
-  const [posts, setPosts] = useState<Post[]>([]);
+const Square: React.FC<SquareProps> = React.memo(({ onRefresh }) => {
+  const [allPosts, setAllPosts] = useState<Post[]>([]);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { state, setAllPosts: setSearchPosts } = useSearch();
 
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch('http://localhost:5001/api/posts');
       if (response.ok) {
         const data = await response.json();
-        setPosts(data);
+        setAllPosts(data);
+        setSearchPosts(data);
         setError(null);
       } else {
         setError('Failed to fetch posts');
@@ -30,38 +34,45 @@ const Square: React.FC<SquareProps> = ({ onRefresh }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [setSearchPosts]);
 
   useEffect(() => {
     fetchPosts();
+  }, [fetchPosts]);
+
+  const handlePostClick = useCallback((post: Post) => {
+    setSelectedPost(post);
   }, []);
 
-  const handlePostClick = (post: Post) => {
-    setSelectedPost(post);
-  };
-
-  const handleBackToList = () => {
+  const handleBackToList = useCallback(() => {
     setSelectedPost(null);
-  };
+  }, []);
 
   if (selectedPost) {
     return <PostDetail post={selectedPost} onBack={handleBackToList} />;
   }
 
+  const displayPosts = state.query ? state.filteredPosts : allPosts;
+
   return (
     <div className="square-container">
+      <SearchBar posts={allPosts} />
+      
       {error && <div className="error">{error}</div>}
       
       {loading ? (
         <div className="loading">Loading posts...</div>
       ) : (
         <div className="posts-grid">
-          {posts.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
-              No posts yet. Create the first one in the "Create New" tab!
+          {displayPosts.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+              {state.query ? 
+                `No posts found matching "${state.query}"` : 
+                "No posts yet. Create the first one in the \"Create New\" tab!"
+              }
             </div>
           ) : (
-            posts.map((post) => (
+            displayPosts.map((post) => (
               <PostCard
                 key={post.id}
                 post={post}
@@ -73,6 +84,8 @@ const Square: React.FC<SquareProps> = ({ onRefresh }) => {
       )}
     </div>
   );
-};
+});
+
+Square.displayName = 'Square';
 
 export default Square;

@@ -91,3 +91,19 @@ By project completion, we will deliver a **fully functional**, **privacy-conscio
 
 
 
+📋 update脚本使用步骤：
+
+  1. 上传脚本到服务器
+
+  scp update.sh root@8.221.125.31:/opt/WanderLog/
+
+  2. 连接到服务器
+
+  ssh root@8.221.125.31
+
+  3. 运行更新脚本
+
+  cd /opt/WanderLog
+  chmod +x update.sh
+  ./update.sh
+

@@ -3,12 +3,15 @@ import './App.css';
 import Square from './components/Square';
 import CreateNew from './components/CreateNew';
 import About from './components/About';
+import { ThemeProvider, useTheme } from './contexts/ThemeContext';
+import { SearchProvider } from './contexts/SearchContext';
 
 type TabType = 'square' | 'create' | 'about';
 
-function App() {
+const AppContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('square');
   const [refreshKey, setRefreshKey] = useState(0);
+  const { theme, toggleTheme } = useTheme();
 
   const handlePostCreated = () => {
     setRefreshKey(prev => prev + 1);
@@ -33,14 +36,23 @@ function App() {
       <header className="header">
         <div className="header-top">
           <h1>WanderLog</h1>
-          <a 
-            href="https://github.com/ShakyVertex/WanderLog" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="github-button"
-          >
-            GitHub
-          </a>
+          <div className="header-actions">
+            <button 
+              className="theme-toggle"
+              onClick={toggleTheme}
+              aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+            >
+              {theme === 'light' ? '🌙' : '☀️'}
+            </button>
+            <a 
+              href="https://github.com/ShakyVertex/WanderLog" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="github-button"
+            >
+              GitHub
+            </a>
+          </div>
         </div>
         <nav className="tab-navigation">
           <button 
@@ -68,6 +80,16 @@ function App() {
         {renderContent()}
       </div>
     </div>
+  );
+};
+
+function App() {
+  return (
+    <ThemeProvider>
+      <SearchProvider>
+        <AppContent />
+      </SearchProvider>
+    </ThemeProvider>
   );
 }
 

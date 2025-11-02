@@ -16,12 +16,41 @@ Experience WanderLog in action! The demo deployment showcases:
 
 ## Features
 
-- Anonymous posting (no login system)
-- Posts include title, text content, and up to 6 images
-- UUID-based post identification
-- Immutable posts (no editing or deletion)
-- Simple UI with khaki, black, and white color theme
-- Image upload to server storage
+- **Anonymous posting** (no login system)
+- **Posts include** title, text content, and up to 6 images
+- **UUID-based** post identification
+- **Immutable posts** (no editing or deletion)
+- **Dark/Light theme** with system preference detection
+- **Real-time search** with debounced filtering and search history
+- **Three-tab navigation** (Square/Create New/About)
+- **Responsive design** with smooth transitions
+- **Image upload** to server storage
+
+## 🚀 Advanced React Features
+
+This project demonstrates modern React development patterns and advanced features:
+
+### **State Management**
+- **Context API** with `useReducer` for global theme and search state
+- **Custom Hooks** (`useDebounce`, `useTheme`, `useSearch`) for logic reuse
+- **Local Storage** integration for theme and search history persistence
+
+### **Performance Optimization**
+- **React.memo** for component memoization to prevent unnecessary re-renders
+- **useCallback** hooks for optimized event handlers
+- **Debounced search** to minimize API calls and improve performance
+
+### **User Experience**
+- **Real-time search** with instant filtering and autocomplete suggestions
+- **Theme switching** with CSS variables and smooth transitions
+- **Search history** with persistent storage and quick access
+- **Responsive design** that adapts to different screen sizes
+
+### **Modern React Patterns**
+- **Function components** with hooks throughout
+- **TypeScript** for type safety and better development experience
+- **Custom hook composition** for reusable stateful logic
+- **Context providers** for dependency injection
 
 ## Tech Stack
 
@@ -97,12 +126,25 @@ wanderlog/
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── CreatePost.tsx
-│   │   │   ├── PostCard.tsx
-│   │   │   └── PostDetail.tsx
+│   │   │   ├── About.tsx        # Project documentation component
+│   │   │   ├── CreateNew.tsx    # Post creation wrapper
+│   │   │   ├── CreatePost.tsx   # Post creation form
+│   │   │   ├── PostCard.tsx     # Post preview component
+│   │   │   ├── PostDetail.tsx   # Full post view
+│   │   │   ├── SearchBar.tsx    # Real-time search component
+│   │   │   └── Square.tsx       # Main posts grid view
+│   │   ├── contexts/
+│   │   │   ├── SearchContext.tsx  # Global search state management
+│   │   │   └── ThemeContext.tsx   # Dark/light theme management
+│   │   ├── hooks/
+│   │   │   └── useDebounce.ts     # Custom debounce hook
 │   │   ├── types.ts
 │   │   ├── App.tsx
 │   │   └── App.css
 │   └── package.json
+├── deployment-guide.md   # Server deployment instructions
+├── deploy.sh            # Automated deployment script
+├── update.sh            # Application update script
+├── LICENSE              # MIT License
 └── README.md
 ```

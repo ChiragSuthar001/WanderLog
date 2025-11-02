@@ -6,7 +6,7 @@ interface PostCardProps {
   onClick: () => void;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
+const PostCard: React.FC<PostCardProps> = React.memo(({ post, onClick }) => {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -51,6 +51,8 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
       <div className="post-date">{formatDate(post.createdAt)}</div>
     </div>
   );
-};
+});
+
+PostCard.displayName = 'PostCard';
 
 export default PostCard;
